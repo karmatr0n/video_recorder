@@ -16,7 +16,9 @@ Detaild steps:
 
 Installation
 ============
+
 $ make
+
 $ make install
 
 Configuration
