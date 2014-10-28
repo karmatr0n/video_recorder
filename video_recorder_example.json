@@ -1,0 +1,29 @@
+{
+  "worker": {
+    "IpAddress": "192.168.0.200",
+    "Mencoder":  "/usr/bin/mencoder",
+    "Ffmpeg":    "/usr/bin/ffmpeg",
+    "DestDir":   "/var/video"
+  },
+  "db": {
+    "Host":      "192.168.0.1",
+    "User":      "someworker",
+    "Password":  "someword!",
+    "Database":  "somdb"
+  },
+  "ftp_src": {
+    "Host":      "192.168.0.1",
+    "User":      "someuser",
+    "Password":  "somepassword!"
+  },
+  "ftp_dest": {
+    "Host":      "192.168.0.2",
+    "User":      "someuser",
+    "Password":  "somepassword!"
+  },
+  "api": {
+    "Url":       "https://192.168.02/api/v1/videos",
+    "Token":     "b4bbbef27e87b5d6d17ad90612b8b598"
+  }
+}
+
