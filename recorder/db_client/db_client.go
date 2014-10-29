@@ -103,8 +103,6 @@ func (s *Session) VideoByCameraAndWorker() (err error) {
   default:
     return nil
   }
-
-  return nil
 }
 
 func (s *Session) Camera() (err error) {
@@ -162,8 +160,7 @@ func (s *Session) AssignVideo() (err error) {
 
   err = s.VideoDurationByCamera()
   if err != nil {
-    err_str = fmt.Sprintf("The date range is missed for the camera_id: %d, SQL error: %s",
-    s.camera.Id, err)
+    err_str = fmt.Sprintf("I can't get the video duration for camera_id: %d, SQL error: %s", s.camera.Id, err)
     return errors.New(err_str)
   }
 
@@ -220,7 +217,7 @@ func (s *Session) AssignImages() (err error) {
   } else {
     query := "SELECT id, camera_id, path, uploaded_at FROM images " +
     "WHERE camera_id = ($1) AND uploaded_at >= ($2)  AND uploaded_at <= ($3) " +
-    "AND assigned IS FALSE " +
+    "AND assigned IS TRUE " +
     "ORDER BY uploaded_at ASC"
     rows, err := s.db.Query(query, s.video.CameraId, s.video.BeginsAt, s.video.EndsAt)
     if err != nil {
