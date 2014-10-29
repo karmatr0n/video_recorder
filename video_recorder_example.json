@@ -3,7 +3,8 @@
     "IpAddress": "192.168.0.200",
     "Mencoder":  "/usr/bin/mencoder",
     "Ffmpeg":    "/usr/bin/ffmpeg",
-    "DestDir":   "/var/video"
+    "DestDir":   "/var/video",
+    "ImageMissed": "/usr/local/share/images/missed.jpg"
   },
   "db": {
     "Host":      "192.168.0.1",

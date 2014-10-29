@@ -3,7 +3,6 @@ package recorder
 import (
   "fmt"
   "os"
-  "path/filepath"
   "strings"
   "os/exec"
   "./db_client"
@@ -31,6 +30,7 @@ type WorkerConf struct {
   Mencoder string
   Ffmpeg string
   DestDir string
+  ImageMissed string
 }
 
 func Start(config *db_client.Configuration, worker_conf *WorkerConf) (*Recorder, error) {
@@ -78,8 +78,7 @@ func (r *Recorder) UploadFiles() (err error) {
 }
 
 func (r *Recorder) MakeDestDir() (err error) {
-  dir := filepath.Dir(r.DestDir())
-  if _, err = os.Stat(dir); os.IsNotExist(err) {
+  if _, err = os.Stat(r.DestDir()); os.IsNotExist(err) {
     // os.MkDirAll function doesn't work with long paths
     // err = os.MkdirAll(dir, 0755)
     exec_command := exec.Command("mkdir", "-p", r.DestDir())
@@ -92,25 +91,33 @@ func (r *Recorder) MakeDestDir() (err error) {
 }
 
 func (r *Recorder) BuildVideo() (err error) {
-  if _, err := os.Stat(r.DestFile()); os.IsNotExist(err) {
-    err = r.MakeDestDir()
-    if err != nil {
-      return err
-    }
+  err = r.MakeDestDir()
+  if err != nil {
+    return err
+  }
 
-    var cmd_images string
-    cmd_images = fmt.Sprintf("mf://%s",strings.Join(r.db.ImageList(), ","))
-    exec_command := exec.Command(r.worker_conf.Mencoder, cmd_images,
-    "-mf", "w=800:h=600:fps=1:type=jpg",
-    "-ovc", "lavc",
-    "-lavcopts", "vcodec=mpeg4:mbd=2:trell",
-    "-oac", "copy",
-    "-o", r.DestFile())
-    err = exec_command.Run()
-    if err != nil {
-      return err
+  files := make([]string, 0)
+  for _, file := range r.db.ImageList() {
+    if _, err := os.Stat(file); os.IsNotExist(err) {
+      files = append(files, r.worker_conf.ImageMissed)
+    } else {
+      files = append(files, file)
     }
   }
+
+  var cmd_images string
+  cmd_images = fmt.Sprintf("mf://%s",strings.Join(files, ","))
+  exec_command := exec.Command(r.worker_conf.Mencoder, cmd_images,
+  "-mf", "w=800:h=600:fps=1:type=jpg",
+  "-ovc", "lavc",
+  "-lavcopts", "vcodec=mpeg4:mbd=2:trell",
+  "-oac", "copy",
+  "-o", r.DestFile())
+  err = exec_command.Run()
+  if err != nil {
+    return err
+  }
+
   return nil
 }
 
@@ -184,13 +191,13 @@ func (r *Recorder) RemoveFiles() error {
   files = append(files, r.DestFile())
   files = append(files, r.ThumbFile())
   for _, f := range files {
-     if _, err := os.Stat(f); os.IsNotExist(err) {
-       continue
-     }
-     err := os.Remove(f)
-     if err != nil {
-       return err
-     }
+    if _, err := os.Stat(f); os.IsNotExist(err) {
+      continue
+    }
+    err := os.Remove(f)
+    if err != nil {
+      return err
+    }
   }
   return nil
 }
