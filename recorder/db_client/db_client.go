@@ -282,7 +282,7 @@ func (s *Session) VideoBeginsAtMinute() int {
 }
 
 func (s *Session) DirBeginsAt() (path string) {
-  path = fmt.Sprintf("%d/%d/%d/%d",
+  path = fmt.Sprintf("%d/%02d/%02d/%02d",
   s.video.BeginsAt.Year(),
   s.video.BeginsAt.Month(),
   s.video.BeginsAt.Day(),

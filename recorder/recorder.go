@@ -164,7 +164,7 @@ func (r *Recorder) DestDir() string {
 }
 
 func (r *Recorder) VideoFileName() string {
-  file_name := fmt.Sprintf("%d.avi", r.db.VideoBeginsAtMinute())
+  file_name := fmt.Sprintf("%02d.avi", r.db.VideoBeginsAtMinute())
   return file_name
 }
 
@@ -174,7 +174,7 @@ func (r *Recorder) DestFile() string {
 }
 
 func (r *Recorder) ThumbFile() string {
-  file := fmt.Sprintf("%d.jpg", r.db.VideoBeginsAtMinute())
+  file := fmt.Sprintf("%02d.jpg", r.db.VideoBeginsAtMinute())
   path := []string{r.DestDir(), file}
   return strings.Join(path, "/")
 }
