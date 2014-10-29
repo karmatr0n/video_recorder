@@ -14,7 +14,7 @@ var defaultConf string
 
 func init() {
   const (
-    conf_path = "/etc/video_recoder.json"
+    conf_path = "/etc/video_recorder.json"
     usage = "The configuration file is missed"
   )
   flag.StringVar(&defaultConf, "config", conf_path, usage)
