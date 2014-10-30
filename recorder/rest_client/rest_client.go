@@ -2,6 +2,7 @@ package rest_client
 
 import (
   "github.com/jmcvetta/napping"
+  "net/http"
   "net/url"
   "errors"
 )
@@ -37,6 +38,9 @@ type Video struct {
 func Start(config *Configuration) (*WebService, error) {
   if config.Url != "" && config.Token != "" {
     s := napping.Session{}
+    h := http.Header{}
+    h.Add("X-AUTH-TOKEN", config.Token)
+    s.Header = &h
     // s.Log = true
     ws := WebService{url: config.Url, token: config.Token, s: &s}
     return &ws, nil
