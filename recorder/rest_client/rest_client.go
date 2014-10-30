@@ -23,7 +23,6 @@ type Params struct {
 
 type WebService struct {
   url string
-  token string
   s     *napping.Session
   video *Video
 }
@@ -41,8 +40,7 @@ func Start(config *Configuration) (*WebService, error) {
     h := http.Header{}
     h.Add("X-AUTH-TOKEN", config.Token)
     s.Header = &h
-    // s.Log = true
-    ws := WebService{url: config.Url, token: config.Token, s: &s}
+    ws := WebService{url: config.Url,  s: &s}
     return &ws, nil
   } else {
     return nil, errors.New("Specify the url and the token")
